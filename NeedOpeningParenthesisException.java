@@ -1,0 +1,3 @@
+public class NeedOpeningParenthesisException extends IllegalArgumentException
+{
+}
