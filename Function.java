@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.util.Stack;
+import java.util.Scanner;
 
 /**
  *  Dec 9: Started, created populateVariables() method.
@@ -102,4 +103,43 @@ public class Function
       }
       return value;
    }
+   
+   public Double evaluate()
+   {
+      Function evaluation = substitute();
+      
+      if(!evaluation.variables.isEmpty())
+      {
+         throw new VariableNotSetException();
+      }
+            
+      evaluation = evaluation.evaluateParentheses();
+      evaluation = evaluation.evaluateMult();
+      evaluation = evaluation.evaluateAdd();
+      
+      return new value;
+   }
+   
+   public Function substitute()
+   {
+      String substituted = expression;
+      Double value;
+      for(Character x : variables.keySet())
+      {
+         if( (value = variables.get(x)) != null)
+         {
+            substituted = substituted.replaceAll(x.toString(), value.toString());
+         }
+      }
+      return new Function(substituted);
+   }
+   //CURRENT
+   private Function evaluateParentheses()
+   {
+      if(expression.indexOf
+   }
+            
+      evaluation = evaluation.evaluateParentheses();
+      evaluation = evaluation.evaluateMult();
+      evaluation = evaluation.evaluateAdd();
 }
