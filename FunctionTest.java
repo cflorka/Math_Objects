@@ -3,6 +3,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 
 public class FunctionTest {
    Function one, two, three, four;
@@ -103,9 +105,16 @@ public class FunctionTest {
    @Test public void variableTest()
    {
       assertEquals(one.variableString(), "");
-      assertEquals(two.variableString(), "xy");
-      assertEquals(three.variableString(), "xXyz");
-      assertEquals(four.variableString(), "xy");
+      assertEquals(orderString(two.variableString()), "xy");
+      assertEquals(orderString(three.variableString()), "Xxyz");
+      assertEquals(orderString(four.variableString()), "xy");
+   }
+   
+   private static String orderString(String string)
+   {
+      char[] charArray = string.toCharArray();
+      Arrays.sort(charArray);
+      return new String(charArray);
    }
    
    /** Test setValueOf/getValueOf methods **/

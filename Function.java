@@ -140,13 +140,13 @@ public class Function
       before = after = "";
       evaluated = expression;
       int openIndex = indexOfOpenParenthesis();
-      int closeIndex = indexOfCloseParenthesis();
+      int closeIndex = indexOfCloseParenthesis(openIndex);
       
       if(openIndex > 0)
       {
          before = expression.substring(0, openIndex - 1);
          evaluated = expression.substring(openIndex + 1, closeIndex - 1);
-         evaluated = new Function(evaluated).evaluate();
+         evaluated = new Function(evaluated).evaluate().toString();
          after = expression.substring(closeIndex + 1, expression.length());
       }
       return before + evaluated + after;
@@ -168,18 +168,28 @@ public class Function
       return index;
    }
    
-   private int indexOfCloseParenthesis()
+   private int indexOfCloseParenthesis(int openIndex)
    {
-      int index = expression.lastIndexOf(CLOSING.charAt(0));
-      int temp = index;
+      Character openingParen = expression.charAt(openIndex);
+      Character closingParen = CLOSING.charAt(OPENING.indexOf(openingParen));
+      String substring = expression.substring(openIndex);
+      Stack<Character> parenStack = new Stack<>();
       
-      for(int i = 1; i < expression.length(); ++i)
+      parenStack.push(openingParen);
+      int index = 1; //starts at 1 since openParen is first char
+      Character temp;
+      while(!parenStack.isEmpty()) 
       {
-          temp = expression.indexOf(OPENING.charAt(i));
-          if(temp > 0 && temp < index)
-          {
-              index = temp;
-          }
+         Character cursor = substring.charAt(index);
+         if(cursor.equals(openingParen))
+         {
+            parenStack.push(openingParen);
+         }
+         else if(cursor.equals(closingParen))
+         {
+            parenStack.push(closingParen);
+         }
+         ++index;
       }
       return index;
    }
@@ -192,7 +202,7 @@ public class Function
       
       for(int i = 0; i < OPERATORS.length(); ++i)
       {
-         String operator = OPERATORS.charAt(i);
+         Character operator = OPERATORS.charAt(i);
          int index = expression.indexOf(operator);
          if(index > 0)
          {
@@ -203,8 +213,8 @@ public class Function
       return evaluated;
    }
    
-   private int indexOfValueBefore(Char operator)
+   private int indexOfValueBefore(Character operator)
    {
-      
+      return 0;
    }
 }
