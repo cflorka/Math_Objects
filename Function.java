@@ -17,7 +17,7 @@ public class Function
    String expression;
    
    HashMap<Character, Double> variables;
-   String OPERATORS = "^*/+-"; //Order matters, keep in PEMDAS order
+   String OPERATORS = "+-*/^"; //Order matters, keep in PEMDAS order
    String OPENING = "([{";
    String CLOSING = ")]}";
    String NUMBERS = "0123456789.";
@@ -107,7 +107,6 @@ public class Function
    public Double evaluate()
    {
       Function fxn = substitute();
-      String evaluation = fxn.expression;
       
       if(!fxn.variables.isEmpty())
       {
@@ -115,9 +114,9 @@ public class Function
       }
       
       fxn = new Function(fxn.evaluateParentheses());
-      fxn = new Function(fxn.evaluateOperations());
+      fxn = new Function(fxn.evaluateOperations(fxn.expression, 0));
       
-      return 0.0;
+      return Double.valueOf(fxn.toString());
    }
    
    public Function substitute()
@@ -194,21 +193,20 @@ public class Function
       return index;
    }
    
-   private String evaluateOperations()
+   private String[] evaluateOperations(String[] pieces, int operatorIndex)
    {
-      String before, evaluated, after;
-      before = after = "";
-      evaluated = expression;
+      String[] evaluated = pieces;
       
-      for(int i = 0; i < OPERATORS.length(); ++i)
+      //TODO mergesort-like evaluation. Split into pieces, then split pieces into pieces until down to 1.
+      //"merge" back by applying operation
+      
+      //Check if no operators in consecutive pieces, if so set evaluated based on current operator
+      for(int i = 0; i < pieces.length; ++i)
       {
-         Character operator = OPERATORS.charAt(i);
-         int index = expression.indexOf(operator);
-         if(index > 0)
-         {
-            //TODO split expression into pieces, evaluate
-         }
+         
       }
+      
+      //Else split into smaller pieces based on next operator and recursively go
       
       return evaluated;
    }
@@ -216,5 +214,10 @@ public class Function
    private int indexOfValueBefore(Character operator)
    {
       return 0;
+   }
+   
+   public String toString()
+   {
+      return expression;
    }
 }
