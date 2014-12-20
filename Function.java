@@ -17,7 +17,7 @@ public class Function
    String expression;
    
    HashMap<Character, Double> variables;
-   String OPERATORS = "+-*/^";
+   String OPERATORS = "^*/+-"; //Order matters, keep in PEMDAS order
    String OPENING = "([{";
    String CLOSING = ")]}";
    String NUMBERS = "0123456789.";
@@ -106,18 +106,18 @@ public class Function
    
    public Double evaluate()
    {
-      Function evaluation = substitute();
+      Function fxn = substitute();
+      String evaluation = fxn.expression;
       
-      if(!evaluation.variables.isEmpty())
+      if(!fxn.variables.isEmpty())
       {
          throw new VariableNotSetException();
       }
-            
-      evaluation = evaluation.evaluateParentheses();
-      evaluation = evaluation.evaluateMult();
-      evaluation = evaluation.evaluateAdd();
       
-      return new value;
+      fxn = new Function(fxn.evaluateParentheses());
+      fxn = new Function(fxn.evaluateOperations());
+      
+      return 0.0;
    }
    
    public Function substitute()
@@ -134,12 +134,77 @@ public class Function
       return new Function(substituted);
    }
    //CURRENT
-   private Function evaluateParentheses()
+   private String evaluateParentheses()
    {
-      if(expression.indexOf
+      String before, evaluated, after;
+      before = after = "";
+      evaluated = expression;
+      int openIndex = indexOfOpenParenthesis();
+      int closeIndex = indexOfCloseParenthesis();
+      
+      if(openIndex > 0)
+      {
+         before = expression.substring(0, openIndex - 1);
+         evaluated = expression.substring(openIndex + 1, closeIndex - 1);
+         evaluated = new Function(evaluated).evaluate();
+         after = expression.substring(closeIndex + 1, expression.length());
+      }
+      return before + evaluated + after;
    }
-            
-      evaluation = evaluation.evaluateParentheses();
-      evaluation = evaluation.evaluateMult();
-      evaluation = evaluation.evaluateAdd();
+      
+   private int indexOfOpenParenthesis()
+   {
+      int index = expression.indexOf(OPENING.charAt(0));
+      int temp = index;
+      
+      for(int i = 1; i < expression.length(); ++i)
+      {
+          temp = expression.indexOf(OPENING.charAt(i));
+          if(temp > 0 && temp < index)
+          {
+              index = temp;
+          }
+      }
+      return index;
+   }
+   
+   private int indexOfCloseParenthesis()
+   {
+      int index = expression.lastIndexOf(CLOSING.charAt(0));
+      int temp = index;
+      
+      for(int i = 1; i < expression.length(); ++i)
+      {
+          temp = expression.indexOf(OPENING.charAt(i));
+          if(temp > 0 && temp < index)
+          {
+              index = temp;
+          }
+      }
+      return index;
+   }
+   
+   private String evaluateOperations()
+   {
+      String before, evaluated, after;
+      before = after = "";
+      evaluated = expression;
+      
+      for(int i = 0; i < OPERATORS.length(); ++i)
+      {
+         String operator = OPERATORS.charAt(i);
+         int index = expression.indexOf(operator);
+         if(index > 0)
+         {
+            //TODO split expression into pieces, evaluate
+         }
+      }
+      
+      return evaluated;
+   }
+   
+   private int indexOfValueBefore(Char operator)
+   {
+      
+   }
 }
