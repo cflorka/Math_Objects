@@ -13,9 +13,9 @@ public class FunctionTest {
     *  for all tests). **/
    @Before public void setUp() {
       one = new Function("");
-      two = new Function("{y[x^2]+(x+1)+3}");
-      three = new Function("[yx]^2+(z+1)^X");
-      four = new Function("{yx^2+(x*1)}/3");
+      two = new Function("{y*[x^2]+(x+1)+3}");
+      three = new Function("[y*x]^2+(z+1)^X");
+      four = new Function("{y*x^2+(x*1)}/3");
    }
 
 
@@ -123,9 +123,9 @@ public class FunctionTest {
       assertTrue(noSuchVariable(one, 'a'));
       assertFalse(noSuchVariable(two, 'x'));
       two.setValueOf('x', 0.0);
-      assertEquals(two.getValueOf('x'), 0.0, 0.0001);
+      assertEquals(two.getValueOf('x'), 0.0, 0.000);
       two.setValueOf('x', 2.5);
-      assertEquals(two.getValueOf('x'), 2.5, 0.0001);
+      assertEquals(two.getValueOf('x'), 2.5, 0.000);
       assertTrue(variableNotSet(two, 'y'));
    }
    
@@ -155,5 +155,12 @@ public class FunctionTest {
          thrown = true;
       }
       return thrown;      
+   }
+   
+   @Test public void evaluateTest()
+   {
+      two.setValueOf('x', 1.0);
+      two.setValueOf('y', 1.0);
+      assertEquals(two.evaluate(), 6.0, 0.0);
    }
 }

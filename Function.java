@@ -139,10 +139,10 @@ public class Function
       before = after = "";
       evaluated = expression;
       int openIndex = indexOfOpenParenthesis();
-      int closeIndex = indexOfCloseParenthesis(openIndex);
       
       if(openIndex > 0)
       {
+         int closeIndex = indexOfCloseParenthesis(openIndex);
          before = expression.substring(0, openIndex - 1);
          evaluated = expression.substring(openIndex + 1, closeIndex - 1);
          evaluated = new Function(evaluated).evaluate().toString();
@@ -156,7 +156,7 @@ public class Function
       int index = expression.indexOf(OPENING.charAt(0));
       int temp = index;
       
-      for(int i = 1; i < expression.length(); ++i)
+      for(int i = 1; i < OPENING.length(); ++i)
       {
           temp = expression.indexOf(OPENING.charAt(i));
           if(temp > 0 && temp < index)
@@ -186,27 +186,57 @@ public class Function
          }
          else if(cursor.equals(closingParen))
          {
-            parenStack.push(closingParen);
+            parenStack.pop();
          }
          ++index;
       }
       return index;
    }
    
-   private String[] evaluateOperations(String[] pieces, int operatorIndex)
+   private String evaluateOperations(String input, int operatorIndex)
    {
-      String[] evaluated = pieces;
-      
-      //TODO mergesort-like evaluation. Split into pieces, then split pieces into pieces until down to 1.
-      //"merge" back by applying operation
+      String evaluated;
+      Character operator = OPERATORS.charAt(operatorIndex);
+      String[] pieces = input.split(operator.toString());
+      int numOfPieces = pieces.length;
       
       //Check if no operators in consecutive pieces, if so set evaluated based on current operator
-      for(int i = 0; i < pieces.length; ++i)
+      if(operatorIndex < OPERATORS.length() && numOfPieces > 1)
       {
-         
+         for(int i = 0; i < numOfPieces; ++i)
+         {
+            pieces[i] = evaluateOperations(pieces[i], operatorIndex + 1);
+         }
+         Double cursor = Double.valueOf(pieces[0]);
+         Double total = cursor;
+         for(int i = 1; i < numOfPieces ; ++i)
+         {
+            cursor = Double.valueOf(pieces[1]);
+            switch(operator)
+            {
+               case '+':
+                  total += cursor;
+                  break;
+               case '-':
+                  total -= cursor;
+                  break;
+               case '*':
+                  total *= cursor;
+                  break;
+               case '/':
+                  total /= cursor;
+                  break;
+               case '^':
+                  total = Math.pow(total, cursor);
+                  break;
+             }
+         }
+         evaluated = total.toString();
       }
-      
-      //Else split into smaller pieces based on next operator and recursively go
+      else
+      {
+         evaluated = input;
+      }
       
       return evaluated;
    }
