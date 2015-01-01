@@ -1,6 +1,7 @@
 import java.util.HashMap;
 import java.util.Stack;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 /**
  *  Dec 9: Started, created populateVariables() method.
@@ -107,16 +108,16 @@ public class Function
    public Double evaluate()
    {
       Function fxn = substitute();
+      String evaluated;
       
       if(!fxn.variables.isEmpty())
       {
          throw new VariableNotSetException();
       }
       
-      fxn = new Function(fxn.evaluateParentheses());
-      fxn = new Function(fxn.evaluateOperations(fxn.expression, 0));
-      
-      return Double.valueOf(fxn.toString());
+      evaluated = fxn.evaluateParentheses();
+      evaluated = evaluateOperations(evaluated, 0);
+      return Double.valueOf(evaluated);
    }
    
    public Function substitute()
@@ -132,7 +133,8 @@ public class Function
       }
       return new Function(substituted);
    }
-   //CURRENT
+   
+   //Needs to check for independant parens 
    private String evaluateParentheses()
    {
       String before, evaluated, after;
@@ -140,13 +142,17 @@ public class Function
       evaluated = expression;
       int openIndex = indexOfOpenParenthesis();
       
-      if(openIndex > 0)
+      if(openIndex >= 0)
       {
          int closeIndex = indexOfCloseParenthesis(openIndex);
-         before = expression.substring(0, openIndex - 1);
+         before = expression.substring(0, openIndex);
          evaluated = expression.substring(openIndex + 1, closeIndex - 1);
          evaluated = new Function(evaluated).evaluate().toString();
-         after = expression.substring(closeIndex + 1, expression.length());
+         int length = expression.length();
+         if(closeIndex < length)
+         {
+            after = expression.substring(closeIndex + 1, length);
+         }
       }
       return before + evaluated + after;
    }
@@ -196,42 +202,47 @@ public class Function
    private String evaluateOperations(String input, int operatorIndex)
    {
       String evaluated;
-      Character operator = OPERATORS.charAt(operatorIndex);
-      String[] pieces = input.split(operator.toString());
-      int numOfPieces = pieces.length;
-      
-      //Check if no operators in consecutive pieces, if so set evaluated based on current operator
-      if(operatorIndex < OPERATORS.length() && numOfPieces > 1)
+      if(operatorIndex < OPERATORS.length())
       {
+         Character operator = OPERATORS.charAt(operatorIndex);
+         String[] pieces = Pattern.compile(operator.toString(), Pattern.LITERAL).split(input);
+         int numOfPieces = pieces.length;
          for(int i = 0; i < numOfPieces; ++i)
          {
             pieces[i] = evaluateOperations(pieces[i], operatorIndex + 1);
          }
-         Double cursor = Double.valueOf(pieces[0]);
-         Double total = cursor;
-         for(int i = 1; i < numOfPieces ; ++i)
+         if(numOfPieces > 1)
          {
-            cursor = Double.valueOf(pieces[1]);
-            switch(operator)
+            Double cursor = Double.valueOf(pieces[0]);
+            Double total = cursor;
+            for(int i = 1; i < numOfPieces ; ++i)
             {
-               case '+':
-                  total += cursor;
-                  break;
-               case '-':
-                  total -= cursor;
-                  break;
-               case '*':
-                  total *= cursor;
-                  break;
-               case '/':
-                  total /= cursor;
-                  break;
-               case '^':
-                  total = Math.pow(total, cursor);
-                  break;
-             }
+               cursor = Double.valueOf(pieces[1]);
+               switch(operator)
+               {
+                  case '+':
+                     total += cursor;
+                     break;
+                  case '-':
+                     total -= cursor;
+                     break;
+                  case '*':
+                     total *= cursor;
+                     break;
+                  case '/':
+                     total /= cursor;
+                     break;
+                  case '^':
+                     total = Math.pow(total, cursor);
+                     break;
+                }
+            }
+            evaluated = total.toString();
          }
-         evaluated = total.toString();
+         else
+         {
+            evaluated = pieces[0];
+         }
       }
       else
       {

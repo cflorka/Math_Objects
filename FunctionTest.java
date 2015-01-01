@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 
 public class FunctionTest {
-   Function one, two, three, four;
+   Function one, two, three, four, five, six, seven, eight, nine;
 
    /** Fixture initialization (common initialization
     *  for all tests). **/
@@ -16,6 +16,11 @@ public class FunctionTest {
       two = new Function("{y*[x^2]+(x+1)+3}");
       three = new Function("[y*x]^2+(z+1)^X");
       four = new Function("{y*x^2+(x*1)}/3");
+      five = new Function("(x+y)");
+      six = new Function("x-y");
+      seven = new Function("x*y");
+      eight = new Function("x/y");
+      nine = new Function("x^y");
    }
 
 
@@ -159,8 +164,26 @@ public class FunctionTest {
    
    @Test public void evaluateTest()
    {
-      two.setValueOf('x', 1.0);
-      two.setValueOf('y', 1.0);
-      assertEquals(two.evaluate(), 6.0, 0.0);
+      setXY(two);
+      assertEquals(two.evaluate(), 6.0, 0.0);/*
+      two = new Function("{y*[x^2]+(x+1)+3}");
+      three = new Function("[y*x]^2+(z+1)^X");
+      four = new Function("{y*x^2+(x*1)}/3");
+      setXY(five);
+      assertEquals(five.evaluate(), 2.0, 0.0);
+      setXY(six);
+      assertEquals(six.evaluate(), 0.0, 0.0);
+      setXY(seven);
+      assertEquals(seven.evaluate(), 1.0, 0.0);
+      setXY(eight);
+      assertEquals(eight.evaluate(), 1.0, 0.0);
+      setXY(nine);
+      assertEquals(nine.evaluate(), 1.0, 0.0);*/
+   }
+   
+   private void setXY(Function fxn)
+   {
+      fxn.setValueOf('x', 1.0);
+      fxn.setValueOf('y', 1.0);
    }
 }
