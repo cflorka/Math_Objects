@@ -2,6 +2,7 @@ import java.util.HashMap;
 import java.util.Stack;
 import java.util.Scanner;
 import java.util.regex.Pattern;
+import java.util.Arrays;
 
 /**
  *  Dec 9: Started, created populateVariables() method.
@@ -151,7 +152,7 @@ public class Function
          int length = expression.length();
          if(closeIndex < length)
          {
-            after = expression.substring(closeIndex + 1, length);
+            after = expression.substring(closeIndex, length);
          }
       }
       return before + evaluated + after;
@@ -162,10 +163,10 @@ public class Function
       int index = expression.indexOf(OPENING.charAt(0));
       int temp = index;
       
-      for(int i = 1; i < OPENING.length(); ++i)
+      for(int i = 0; i < OPENING.length(); ++i)
       {
           temp = expression.indexOf(OPENING.charAt(i));
-          if(temp > 0 && temp < index)
+          if(temp >= 0 && (temp < index || index < 0))
           {
               index = temp;
           }
@@ -177,15 +178,14 @@ public class Function
    {
       Character openingParen = expression.charAt(openIndex);
       Character closingParen = CLOSING.charAt(OPENING.indexOf(openingParen));
-      String substring = expression.substring(openIndex);
       Stack<Character> parenStack = new Stack<>();
       
       parenStack.push(openingParen);
-      int index = 1; //starts at 1 since openParen is first char
-      Character temp;
+      int index = openIndex + 1; //starts at 1 since openParen is first char
+      Character temp, cursor;
       while(!parenStack.isEmpty()) 
       {
-         Character cursor = substring.charAt(index);
+         cursor = expression.charAt(index);
          if(cursor.equals(openingParen))
          {
             parenStack.push(openingParen);
@@ -202,6 +202,7 @@ public class Function
    private String evaluateOperations(String input, int operatorIndex)
    {
       String evaluated;
+      System.out.println(input);
       if(operatorIndex < OPERATORS.length())
       {
          Character operator = OPERATORS.charAt(operatorIndex);

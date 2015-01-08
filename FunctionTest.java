@@ -7,20 +7,20 @@ import java.util.Arrays;
 
 
 public class FunctionTest {
-   Function one, two, three, four, five, six, seven, eight, nine;
+   Function add, minus, mult, div, expon, one, two, three, four;
 
    /** Fixture initialization (common initialization
     *  for all tests). **/
    @Before public void setUp() {
+      add = new Function("[x+y]");
+      minus = new Function("x-y");
+      mult = new Function("x*y");
+      div = new Function("x/y");
+      expon = new Function("x^y");
       one = new Function("");
-      two = new Function("{y*[x^2]+(x+1)+3}");
+      two = new Function("{y*[x^2]+x+1+3}");
       three = new Function("[y*x]^2+(z+1)^X");
       four = new Function("{y*x^2+(x*1)}/3");
-      five = new Function("(x+y)");
-      six = new Function("x-y");
-      seven = new Function("x*y");
-      eight = new Function("x/y");
-      nine = new Function("x^y");
    }
 
 
@@ -164,21 +164,18 @@ public class FunctionTest {
    
    @Test public void evaluateTest()
    {
+      setXY(add);
+      assertEquals(2.0, add.evaluate(), 0.0);
+      setXY(minus);
+      assertEquals(0.0, minus.evaluate(), 0.0);
+      setXY(mult);
+      assertEquals(1.0, mult.evaluate(), 0.0);
+      setXY(div);
+      assertEquals(1.0, div.evaluate(), 0.0);
+      setXY(expon);
+      assertEquals(1.0, expon.evaluate(), 0.0);
       setXY(two);
-      assertEquals(two.evaluate(), 6.0, 0.0);/*
-      two = new Function("{y*[x^2]+(x+1)+3}");
-      three = new Function("[y*x]^2+(z+1)^X");
-      four = new Function("{y*x^2+(x*1)}/3");
-      setXY(five);
-      assertEquals(five.evaluate(), 2.0, 0.0);
-      setXY(six);
-      assertEquals(six.evaluate(), 0.0, 0.0);
-      setXY(seven);
-      assertEquals(seven.evaluate(), 1.0, 0.0);
-      setXY(eight);
-      assertEquals(eight.evaluate(), 1.0, 0.0);
-      setXY(nine);
-      assertEquals(nine.evaluate(), 1.0, 0.0);*/
+      assertEquals(6.0, two.evaluate(), 0.0);
    }
    
    private void setXY(Function fxn)
