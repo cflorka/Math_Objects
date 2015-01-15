@@ -106,6 +106,7 @@ public class Function
       return value;
    }
    
+   //TODO make easier to use recursively
    public Double evaluate()
    {
       Function fxn = substitute();
@@ -135,12 +136,17 @@ public class Function
       return new Function(substituted);
    }
    
-   //Needs to check for independant parens 
    private String evaluateParentheses()
+   {
+      return evaluateParentheses(expression);
+   }
+   
+   //Needs to check for independant parens 
+   private String evaluateParentheses(String input)
    {
       String before, evaluated, after;
       before = after = "";
-      evaluated = expression;
+      evaluated = input;
       int openIndex = indexOfOpenParenthesis();
       
       if(openIndex >= 0)
@@ -202,12 +208,13 @@ public class Function
    private String evaluateOperations(String input, int operatorIndex)
    {
       String evaluated;
-      System.out.println(input);
+      
       if(operatorIndex < OPERATORS.length())
       {
          Character operator = OPERATORS.charAt(operatorIndex);
          String[] pieces = Pattern.compile(operator.toString(), Pattern.LITERAL).split(input);
          int numOfPieces = pieces.length;
+         
          for(int i = 0; i < numOfPieces; ++i)
          {
             pieces[i] = evaluateOperations(pieces[i], operatorIndex + 1);
@@ -218,7 +225,7 @@ public class Function
             Double total = cursor;
             for(int i = 1; i < numOfPieces ; ++i)
             {
-               cursor = Double.valueOf(pieces[1]);
+               cursor = Double.valueOf(pieces[i]);
                switch(operator)
                {
                   case '+':
