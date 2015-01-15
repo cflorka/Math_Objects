@@ -121,7 +121,7 @@ public class Function
       evaluated = evaluateOperations(evaluated, 0);
       return Double.valueOf(evaluated);
    }
-   
+      
    public Function substitute()
    {
       String substituted = expression;
@@ -153,12 +153,30 @@ public class Function
       {
          int closeIndex = indexOfCloseParenthesis(openIndex);
          before = expression.substring(0, openIndex);
+         if(openIndex > 0)
+         {
+            String preOper, operator;
+            
+            preOper = before.substring(0, openIndex - 2);
+            preOper = new Function(preOper).evaluate().toString();
+            
+            before = preOper + ((Character)before.charAt(openIndex - 1)).toString(); //TODO seems needlessly complex
+         }
          evaluated = expression.substring(openIndex + 1, closeIndex - 1);
          evaluated = new Function(evaluated).evaluate().toString();
          int length = expression.length();
          if(closeIndex < length)
          {
-            after = expression.substring(closeIndex, length);
+            after = expression.substring(closeIndex);
+            
+            if(after.length() > 0)
+            {
+               String postOper, operator;
+               
+               postOper = after.substring(1);
+               postOper = new Function(postOper).evaluate().toString();
+               after = after.substring(0, 1) + postOper;
+            }
          }
       }
       return before + evaluated + after;
@@ -204,7 +222,7 @@ public class Function
       }
       return index;
    }
-   
+      
    private String evaluateOperations(String input, int operatorIndex)
    {
       String evaluated;

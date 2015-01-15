@@ -18,7 +18,7 @@ public class FunctionTest {
       div = new Function("x/y");
       expon = new Function("x^y");
       one = new Function("");
-      two = new Function("{y*[x^2]+x+1+3}");
+      two = new Function("{y*[x^2]+(x+1)+3}");
       three = new Function("[y*x]^2+(z+1)^X");
       four = new Function("{y*x^2+(x*1)}/3");
    }
