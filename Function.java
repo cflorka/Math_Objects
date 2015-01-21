@@ -4,17 +4,19 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 import java.util.Arrays;
 
-/**
- *  Dec 9: Started, created populateVariables() method.
+/** A class for mathematical functions.
+ *  Can substitute Double values for variables and then be evaluated to a Double.
+ *  This class is immutable.
  *
- *
+ *  @author Clint Florka
+ *  @version v0.1
  */
+
 
 public class Function
 {
    //TODO: Add function name functionality
    //String name;
-   //String EQUAL_SIGN = "=";
    
    String expression;
    
@@ -23,19 +25,29 @@ public class Function
    String OPENING = "([{";
    String CLOSING = ")]}";
    String NUMBERS = "0123456789.";
+   //String EQUAL_SIGN = "=";
    
+   /** Constructor taking one String argument.
+    *  Removes whitespace and populates variable list and checks for matching parentheses.
+    *  Can contain multiple variables (e.g. 'x' and 'y').
+    *  Note: Does not check for juxtaposition of variables or values and this will cause an
+    *  exception for the evaluate() method.
+    *
+    *  @param input  the String representation of the function, not null
+    *
+    *  @throws MismatchedParenthesisException if the parentheses don't match
+    *  @throws NeedClosingParenthesisException if there is an extra opening parenthesis
+    *  @throws NeedOpeningParenthesisException if there is an extra closing parenthesis            
+    */
    public Function(String input)
    {
       expression = input.replaceAll("\\s","");
       populateVariables();
    }
    
-   /**
-    * Populates variable list and checks for matching parentheses.
-    */
    private void populateVariables()
    {
-      Stack<Character> checkStack = new Stack<>();
+      Stack<Character> parenStack = new Stack<>();
       variables = new HashMap<>();
       
       for(int i = 0; i < expression.length(); ++i)
@@ -45,17 +57,17 @@ public class Function
          
          if(OPENING.indexOf(selected) > -1)
          {
-            checkStack.push(selected);
+            parenStack.push(selected);
          }
          else if((index = CLOSING.indexOf(selected)) > -1)
          {
             //Check if there are more closing parentheses than opening at any point in time
-            if(checkStack.isEmpty())
+            if(parenStack.isEmpty())
             {
                throw new NeedOpeningParenthesisException();
             }
             //Check matching parentheses
-            if(OPENING.indexOf(checkStack.pop()) != index)
+            if(OPENING.indexOf(parenStack.pop()) != index)
             {
                throw new MismatchedParenthesisException();
             };
@@ -68,12 +80,16 @@ public class Function
          }
       }
       //Check if there are no left over opening parentheses
-      if(!checkStack.isEmpty())
+      if(!parenStack.isEmpty())
       {
          throw new NeedClosingParenthesisException();
       }
    }
    
+   /** Returns a string containing all the variables. Used for testing.
+    *
+    *  @returns a String containing all the variables
+    */
    public String variableString()
    {
       String variableString = "";
@@ -84,6 +100,12 @@ public class Function
       return variableString;
    }
    
+   /** Sets the given variable to the given value.
+    *
+    *  @param variable  the Character representation of the variable to be set, not null
+    *  @param value  the Double value to set the variable to, not null
+    *  @throws NoSuchVariableException if the given variable isn't in the function
+    */
    public void setValueOf(Character variable, Double value)
    {
       if(variables.keySet().contains(variable))
@@ -96,6 +118,13 @@ public class Function
       }
    }
    
+   /** Returns the Double value of the given variable.
+    *
+    *  @param variable  the Character representation of the variable to lookup
+    *                   the value of, not null
+    *  @returns value the Double value that has been set for the given variable, not null
+    *  @throws VariableNotSetException if the variable has not yet been set
+    */
    public Double getValueOf(Character variable)
    {
       Double value = variables.get(variable);
@@ -107,6 +136,11 @@ public class Function
    }
    
    //TODO make easier to use recursively
+   /** Returns the Double value of the function evaluated with the values set for the variables.
+    *  
+    *  @returns the Double value of the function evaluated with the values set for the variables
+    *  @throws VariableNotSetException if there are any variables whose values haven't been set
+    */
    public Double evaluate()
    {
       Function fxn = substitute();
@@ -122,7 +156,7 @@ public class Function
       return Double.valueOf(evaluated);
    }
       
-   public Function substitute()
+   private Function substitute()
    {
       String substituted = expression;
       Double value;
@@ -282,7 +316,11 @@ public class Function
    {
       return 0;
    }
-   
+
+   /** Returns String representation of this.
+    *
+    *  @returns this.expression
+    */
    public String toString()
    {
       return expression;
