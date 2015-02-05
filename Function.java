@@ -265,19 +265,26 @@ public class Function
       {
          Character operator = OPERATORS.charAt(operatorIndex);
          
-         String[] pieces;
-         if(operator.equals('-'))
-         {
-            //TODO Figure out regex pattern for '-' without any of the operators before it
-            pieces = Pattern.compile(operator.toString(), Pattern.LITERAL).split(input);
-         }
-         else
-         {
-            pieces = Pattern.compile(operator.toString(), Pattern.LITERAL).split(input);
-         }
+         String[] pieces = Pattern.compile(operator.toString(), Pattern.LITERAL).split(input);
          int numOfPieces = pieces.length;
+         
          for(int i = 0; i < numOfPieces; ++i)
          {
+            //checks for negative numbers when splitting on minus operator
+            if(operator.equals('-'))
+            {
+               if(pieces[i].equals(""))
+               {
+                  pieces[i] = "-" + pieces[i + 1];
+                  pieces[i + 1] = "0.0";
+                  System.out.println(pieces[i]);
+               }
+               else if(OPERATORS.indexOf(pieces[i].charAt(pieces[i].length() - 1)) >= 0)
+               { 
+                  pieces[i] = pieces[i] + "-" + pieces[i + 1];
+                  pieces[i + 1] = "0.0";
+               }
+            }
             pieces[i] = evaluateOperations(pieces[i], operatorIndex + 1);
          }
          if(numOfPieces > 1)
