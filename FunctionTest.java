@@ -162,18 +162,86 @@ public class FunctionTest {
       return thrown;      
    }
    
-   @Test public void evaluateTest()
+   @Test public void evaluateAddTest()
    {
       setXY(add);
       assertEquals(2.0, add.evaluate(), 0.0);
+      
+      add.setValueOf('x', 1.5);
+      add.setValueOf('y', -1.5);
+      assertEquals(0.0, add.evaluate(), 0.0);
+      add.setValueOf('y', -2.0);
+      assertEquals(-0.5, add.evaluate(), 0.0);
+      add.setValueOf('x', -100.125);
+      assertEquals(-102.125, add.evaluate(), 0.0);
+   }
+   
+   @Test public void evaluateMinusTest()
+   {
       setXY(minus);
       assertEquals(0.0, minus.evaluate(), 0.0);
+      
+      minus.setValueOf('x', 1.5);
+      minus.setValueOf('y', -1.5);
+      assertEquals(3.0, minus.evaluate(), 0.0);
+      
+      minus.setValueOf('y', -2.0);
+      assertEquals(3.5, minus.evaluate(), 0.0);
+      
+      minus.setValueOf('x', -100.125);
+      assertEquals(-98.125, minus.evaluate(), 0.0);
+   }
+   
+   @Test public void evaluateMultTest()
+   {
       setXY(mult);
       assertEquals(1.0, mult.evaluate(), 0.0);
+      
+      mult.setValueOf('x', 1.5);
+      mult.setValueOf('y', -1.5);
+      assertEquals(-2.25, mult.evaluate(), 0.0);
+      
+      mult.setValueOf('y', -2.0);
+      assertEquals(-3.0, mult.evaluate(), 0.0);
+      
+      mult.setValueOf('x', -100.125);
+      assertEquals(200.25, mult.evaluate(), 0.0);
+   }
+   
+   @Test public void evaluateDivTest()
+   {
       setXY(div);
       assertEquals(1.0, div.evaluate(), 0.0);
+      
+      div.setValueOf('x', 1.5);
+      div.setValueOf('y', -1.5);
+      assertEquals(-2.25, div.evaluate(), 0.0);
+      
+      div.setValueOf('y', -2.0);
+      assertEquals(-3.0, div.evaluate(), 0.0);
+      
+      div.setValueOf('x', -100.125);
+      assertEquals(200.25, div.evaluate(), 0.0);
+   }
+   
+   @Test public void evaluateExponTest()
+   {
       setXY(expon);
       assertEquals(1.0, expon.evaluate(), 0.0);
+      
+      expon.setValueOf('x', 1.5);
+      expon.setValueOf('y', -1.5);
+      assertEquals(-2.25, expon.evaluate(), 0.0);
+      
+      expon.setValueOf('y', -2.0);
+      assertEquals(-3.0, expon.evaluate(), 0.0);
+      
+      expon.setValueOf('x', -100.125);
+      assertEquals(200.25, expon.evaluate(), 0.0);
+   }
+   
+   @Test public void evaluateTwoTest()
+   {
       setXY(two);
       assertEquals(6.0, two.evaluate(), 0.0);
    }

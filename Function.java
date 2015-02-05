@@ -264,9 +264,18 @@ public class Function
       if(operatorIndex < OPERATORS.length())
       {
          Character operator = OPERATORS.charAt(operatorIndex);
-         String[] pieces = Pattern.compile(operator.toString(), Pattern.LITERAL).split(input);
-         int numOfPieces = pieces.length;
          
+         String[] pieces;
+         if(operator.equals('-'))
+         {
+            //TODO Figure out regex pattern for '-' without any of the operators before it
+            pieces = Pattern.compile(operator.toString(), Pattern.LITERAL).split(input);
+         }
+         else
+         {
+            pieces = Pattern.compile(operator.toString(), Pattern.LITERAL).split(input);
+         }
+         int numOfPieces = pieces.length;
          for(int i = 0; i < numOfPieces; ++i)
          {
             pieces[i] = evaluateOperations(pieces[i], operatorIndex + 1);
@@ -311,12 +320,7 @@ public class Function
       
       return evaluated;
    }
-   
-   private int indexOfValueBefore(Character operator)
-   {
-      return 0;
-   }
-
+      
    /** Returns String representation of this.
     *
     *  @returns this.expression
