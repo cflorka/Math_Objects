@@ -181,9 +181,11 @@ public class FunctionTest {
       setXY(minus);
       assertEquals(0.0, minus.evaluate(), 0.0);
       
+      System.out.println("\n---HERE---");
       minus.setValueOf('x', 1.5);
       minus.setValueOf('y', -1.5);
       assertEquals(3.0, minus.evaluate(), 0.0);
+      System.out.println("---TO HERE---\n");
       
       minus.setValueOf('y', -2.0);
       assertEquals(3.5, minus.evaluate(), 0.0);
@@ -236,11 +238,11 @@ public class FunctionTest {
       expon.setValueOf('y', -2.0);
       assertEquals(Math.pow(1.5, -2.0), expon.evaluate(), 0.0);
       
-      //TODO unexpected minus sign error here
-      /*
-      expon.setValueOf('x', -100.125);
-      assertEquals(Math.pow(-100.125, -2.0), expon.evaluate(), 0.0);
-      */
+      expon.setValueOf('x', -100.0);
+      assertEquals(Math.pow(-100.0, -2.0), expon.evaluate(), 0.0);
+      
+      expon.setValueOf('x', -2.0);
+      assertEquals(Math.pow(-2.0, -2.0), expon.evaluate(), 0.0);
    }
    
    @Test public void evaluateTwoTest()

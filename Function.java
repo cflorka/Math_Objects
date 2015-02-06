@@ -21,7 +21,7 @@ public class Function
    String expression;
    
    HashMap<Character, Double> variables;
-   String OPERATORS = "+-*/^"; //Order matters, keep in PEMDAS order
+   String OPERATORS = "+-*/^"; //Order matters, keep in reverse PEMDAS order
    String OPENING = "([{";
    String CLOSING = ")]}";
    String NUMBERS = "0123456789.";
@@ -86,7 +86,7 @@ public class Function
       }
    }
    
-   /** Returns a string containing all the variables. Used for testing.
+   /** Returns a string containing all the variables.
     *
     *  @returns a String containing all the variables
     */
@@ -268,6 +268,7 @@ public class Function
          String[] pieces = Pattern.compile(operator.toString(), Pattern.LITERAL).split(input);
          int numOfPieces = pieces.length;
          
+         
          for(int i = 0; i < numOfPieces; ++i)
          {
             //checks for negative numbers when splitting on minus operator
@@ -275,16 +276,16 @@ public class Function
             {
                if(pieces[i].equals(""))
                {
-                  pieces[i] = "-" + pieces[i + 1];
-                  pieces[i + 1] = "0.0";
-                  System.out.println(pieces[i]);
+                  pieces = removeEmptyString(pieces, i);
+                  --numOfPieces;
                }
-               else if(OPERATORS.indexOf(pieces[i].charAt(pieces[i].length() - 1)) >= 0)
+               if(OPERATORS.indexOf(pieces[i].charAt(pieces[i].length() - 1)) >= 0)
                { 
                   pieces[i] = pieces[i] + "-" + pieces[i + 1];
                   pieces[i + 1] = "0.0";
                }
             }
+               System.out.println(Arrays.toString(pieces) + operator);
             pieces[i] = evaluateOperations(pieces[i], operatorIndex + 1);
          }
          if(numOfPieces > 1)
@@ -326,6 +327,24 @@ public class Function
       }
       
       return evaluated;
+   }
+   
+   private String[] removeEmptyString(String[] input, int indexOfEmpty)
+   {
+      String[] output = new String[input.length - 1];
+      
+      int cursor = 0;
+      
+      while(cursor < indexOfEmpty)
+      {
+         output[cursor] = input[cursor++];
+      }
+      output[cursor] = "-" + input[++cursor];
+      while(cursor < output.length)
+      {
+         output[cursor] = input[++cursor];
+      }
+      return output;
    }
       
    /** Returns String representation of this.
