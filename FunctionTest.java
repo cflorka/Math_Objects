@@ -181,11 +181,9 @@ public class FunctionTest {
       setXY(minus);
       assertEquals(0.0, minus.evaluate(), 0.0);
       
-      System.out.println("\n---HERE---");
       minus.setValueOf('x', 1.5);
       minus.setValueOf('y', -1.5);
       assertEquals(3.0, minus.evaluate(), 0.0);
-      System.out.println("---TO HERE---\n");
       
       minus.setValueOf('y', -2.0);
       assertEquals(3.5, minus.evaluate(), 0.0);

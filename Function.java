@@ -285,7 +285,7 @@ public class Function
                   pieces[i + 1] = "0.0";
                }
             }
-               System.out.println(Arrays.toString(pieces) + operator);
+            
             pieces[i] = evaluateOperations(pieces[i], operatorIndex + 1);
          }
          if(numOfPieces > 1)
